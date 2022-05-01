@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">SellQuick</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_to_cart_icon">Add to Cart Icon</string>
+    <string name="inr_format">₹ %1s</string>
+    <string name="remove_from_cart">Remove From Cart</string>
+    <string name="view_cart">View Cart</string>
+    <string name="checkout">Checkout</string>
+    <string name="past_1_hour">Past 1 hour</string>
+    <string name="past_1_day">Past 1 day</string>
+    <string name="past_week">Past Week</string>
+    <string name="total_orders">Total Orders %1s</string>
+    <string name="overall_rank">Overall Rank %1s</string>
+    <string name="no_orders">No Orders</string>
+    <string name="no_rank_available">No Rank Available</string>
+    <string name="no_items_in_the_cart">No Items in the cart</string>
 </resources>
