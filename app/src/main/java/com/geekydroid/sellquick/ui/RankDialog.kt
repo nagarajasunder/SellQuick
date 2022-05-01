@@ -2,7 +2,6 @@ package com.geekydroid.sellquick.ui
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,8 @@ private const val TAG = "RankDialog"
 class RankDialog(
     private val item: Item,
     private val hourRank: Pair<Int, Int>,
-    private val dayRank: Pair<Int, Int>
+    private val dayRank: Pair<Int, Int>,
+    private val weekRank: Pair<Int, Int>
 ) : DialogFragment() {
 
     private lateinit var itemName: TextView
@@ -48,6 +48,7 @@ class RankDialog(
             when (checkedId) {
                 R.id.hour_chip -> setData(hourRank, view)
                 R.id.day_chip -> setData(dayRank, view)
+                R.id.week_chip -> setData(weekRank, view)
             }
         }
 

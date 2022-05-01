@@ -1,8 +1,6 @@
 package com.geekydroid.sellquick.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.geekydroid.sellquick.utils.TimeUtils
 import com.geekydroid.sellquickbackend.data.entity.Item
 import com.geekydroid.sellquickbackend.data.entity.ItemRankWrapper
@@ -30,24 +28,37 @@ class HomeFragmentViewModel @Inject constructor(
 
     private val itemRankForDay: HashMap<Int, Pair<Int, Int>> = hashMapOf()
     private val itemRankForHour: HashMap<Int, Pair<Int, Int>> = hashMapOf()
+    private val itemRankForWeek: HashMap<Int, Pair<Int, Int>> = hashMapOf()
 
 
     fun getOrderdata() = orderData
 
 
     fun refreshRanks(
-
         list: List<ItemRankWrapper>
     ) {
-
         val orderForHourList =
-            list.filter { it.orderedOn >= TimeUtils.getPastOneHour() && it.orderedOn <= System.currentTimeMillis() }
+            list.filter { (it.orderedOn >= TimeUtils.getPastOneHour() && it.orderedOn <= System.currentTimeMillis()) }
 
         val orderForDayList = list.filter {
             it.orderedOn >= TimeUtils.getStartTimeOfTheDay() && it.orderedOn <= TimeUtils.getEndTimeOfTheDay()
         }
-        assignRanks(orderForHourList, itemRankForHour)
-        assignRanks(orderForDayList, itemRankForDay)
+
+        val orderForWeekList = list.filter {
+            it.orderedOn >= TimeUtils.getPastOnWeek() && it.orderedOn <= System.currentTimeMillis()
+        }
+
+
+
+        if (orderForHourList.isNotEmpty()) {
+            assignRanks(orderForHourList, itemRankForHour)
+        }
+        if (orderForDayList.isNotEmpty()) {
+            assignRanks(orderForDayList, itemRankForDay)
+        }
+        if (orderForWeekList.isNotEmpty()) {
+            assignRanks(orderForWeekList, itemRankForWeek)
+        }
 
 
     }
@@ -70,7 +81,17 @@ class HomeFragmentViewModel @Inject constructor(
 
     private var cartList: MutableList<Int> = mutableListOf()
 
-    private var items: LiveData<List<Item>> = repository.getAllItems()
+    private val searchText: MutableLiveData<String> = MutableLiveData("")
+
+    private var items: LiveData<List<Item>> = Transformations.switchMap(searchText) {
+        repository.getAllItems(it)
+    }
+
+    fun getSearchText() = searchText
+    fun updateSearchText(text: String) {
+        searchText.postValue(text)
+    }
+
 
     fun getItems() = items
 
@@ -104,13 +125,15 @@ class HomeFragmentViewModel @Inject constructor(
         cartList.clear()
     }
 
-    fun getItemRank(itemId: Int): Pair<Pair<Int, Int>, Pair<Int, Int>> {
+    fun getItemRank(itemId: Int): Triple<Pair<Int, Int>, Pair<Int, Int>, Pair<Int, Int>> {
 
-        return Pair(
+        return Triple(
             itemRankForHour.getOrDefault(
                 itemId, Pair(-1, -1)
             ),
-            itemRankForDay.getOrDefault(itemId, Pair(-1, -1))
+            itemRankForDay.getOrDefault(itemId, Pair(-1, -1)),
+            itemRankForWeek.getOrDefault(itemId, Pair(-1, -1))
+
         )
 
     }

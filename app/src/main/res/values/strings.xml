@@ -15,4 +15,6 @@
     <string name="no_orders">No Orders</string>
     <string name="no_rank_available">No Rank Available</string>
     <string name="no_items_in_the_cart">No Items in the cart</string>
+    <string name="search">Search</string>
+    <string name="no_items_found">No Items Found</string>
 </resources>
